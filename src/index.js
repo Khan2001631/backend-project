@@ -1,6 +1,7 @@
 // require('dotenv').config({path: './env'})
 import dontenv  from 'dotenv'
 import connectDB from "./db/index.js";
+import { app } from './app.js';
 
 dontenv.config({path: './env'})
 // You also have to make changes in script in package.json:
@@ -9,7 +10,17 @@ dontenv.config({path: './env'})
 
 
 
-connectDB(); 
+connectDB()
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running at PORT:  ${process.env.PORT}`);
+        
+    })
+})
+.catch((error) => {
+    console.log("MongoDB connection Failed!!!! ", error);
+    
+}) 
 
 
 
