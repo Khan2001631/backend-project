@@ -12,17 +12,17 @@ const asyncHandler = (requestHandler) => {
 // const asyncHandler = (func) => async () => {}   
 
 
-/*
-// Async Handler using try catch block (One of the ways in production)
-const asyncHandler = (fn) => async (req,res,next) => {
-    try {
-        await fn(req,res,next)
-    }
-    catch(error) {
-        res.status(error.code || 500).json({
-            success: false,
-            message: error.message
-        })
-    }
-}
-*/
+// /*
+// // Async Handler using try catch block (One of the ways in production)
+// const asyncHandler = (fn) => async (req,res,next) => {
+//     try {
+//         await fn(req,res,next)
+//     }
+//     catch(error) {
+//         res.status(error.code || 500).json({
+//             success: false,
+//             message: error.message
+//         })
+//     }
+// }
+// */
