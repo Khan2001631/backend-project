@@ -18,6 +18,8 @@ app.use(cookieParser());
 export {app}
 
 // What is middleware
+
+// To understand middleware in simple terms, middleware says meet me before going to the server. (Jaane se pehle milke jaana)
 // A middleware is a function that has access to the request object (req), the response object (res), 
 // and the next() function in the application's request-response cycle.
 
