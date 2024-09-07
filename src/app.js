@@ -15,6 +15,13 @@ app.use(express.urlencoded({extended: true, limit: '16kb'})); // Middleware to p
 app.use(express.static('public'));   // Middleware to serve static files in public folder such as favicons, pdf, images etc
 app.use(cookieParser());
 
+// routes import 
+
+import userRouter from './routes/user.routes.js'
+
+// Routes declaration
+app.use('/api/v1/users',userRouter)
+
 export {app}
 
 // What is middleware
