@@ -3,7 +3,7 @@ import dontenv  from 'dotenv'
 import connectDB from "./db/index.js";
 import { app } from './app.js';
 
-dontenv.config({path: './env'})
+dontenv.config({path: './.env'})
 // You also have to make changes in script in package.json:
 // "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
 
