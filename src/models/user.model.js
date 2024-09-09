@@ -56,17 +56,17 @@ userSchema.pre("save", async function(next) {
 });
 
 // This code defines a method on the userSchema that checks if a provided password matches the hashed password stored in the user document. It uses the bcrypt.compare function to compare the two passwords, and returns a boolean indicating whether they match.
-userSchema.methods.isPassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+userSchema.methods.isPasswordCorrect = async function(password){
+    return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessToken = function() {
+userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
-            _id: _id,
+            _id: this._id,
             email: this.email,
             username: this.username,
-            fullName: this.fullName 
+            fullName: this.fullName
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -75,10 +75,11 @@ userSchema.methods.generateAccessToken = function() {
     )
 }
 
-userSchema.methods.generateRefreshToken = function() {
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
-            _id: _id
+            _id: this._id,
+            
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
