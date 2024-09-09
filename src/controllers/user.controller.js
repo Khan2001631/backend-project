@@ -3,6 +3,7 @@ import {ApiError} from '../utils/ApiError.js'
 import {User} from '../models/user.model.js'
 import {uploadOnCloudinary} from '../utils/cloudinary.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
+import jwt from 'jsonwebtoken'
 
 const generateAccessAndRefereshTokens = async (userId) => {
     const user = await User.findById(userId);
@@ -170,7 +171,49 @@ const logoutUser = asyncHandler(async (req, res) => {
     
 })
 
-export {registerUser, loginUser, logoutUser}
+const refreshAccessToken = asyncHandler(async (req,res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken 
+
+    if(!incomingRefreshToken) {
+        throw new ApiError(401, "Unauthorized request")
+    }
+
+    try {
+        const decodedToken = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET)
+    
+        const user = await User.findById(decodedToken?._id);
+    
+        if(!user) {
+            throw new ApiError(401,"Invalid refresh token")
+        }
+    
+        if(incomingRefreshToken !== user?.refreshToken) {
+            throw new ApiError(402,"Refresh token is expired or used.")
+        }
+    
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+    
+        const {accessToken, newRefreshToken} = generateAccessAndRefereshTokens(user?._id);
+    
+        return res.status(200).cookie("accessToken",accessToken).cookie("refreshToken",newRefreshToken)
+        .json(ApiResponse(
+            200,
+            {
+                accessToken, refreshToken: newRefreshToken
+            },
+            "Access token refreshed"
+        ))
+    } catch (error) {
+        throw new ApiError(404,error?.message || "Invalid refresh token")
+    }
+
+
+})
+
+export {registerUser, loginUser, logoutUser, refreshAccessToken}
 
 // Here we will notice that although we have an asyncHandler utitlity function which returns a promise,
 // still it is better to write our function using async because there might be a case where we have 
